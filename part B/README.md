@@ -15,6 +15,9 @@ https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python
 _Scikit-Learn Decision Trees Explained:_
 https://towardsdatascience.com/scikit-learn-decision-trees-explained-803f3812290d
 
+_Understanding the decision tree structure:_
+https://scikit-learn.org/stable/auto_examples/tree/plot_unveil_tree_structure.html
+
 
 ## iris classification tree with depth=5
 ![myTree](https://user-images.githubusercontent.com/39053503/118901995-58352480-b91d-11eb-83c9-2427389052bd.png)
