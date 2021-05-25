@@ -20,8 +20,9 @@ https://towardsdatascience.com/everything-you-need-to-know-about-min-max-normali
 _How to One Hot Encode Sequence Data in Python:_
 https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/
 
-
-
+#### Preprocessing 3: Polynomial Regression
+_Machine Learning - Polynomial Regression:_
+https://www.w3schools.com/python/python_ml_polynomial_regression.asp
 
 ## iris classification tree with depth=5
 ![myTree](https://user-images.githubusercontent.com/39053503/118901995-58352480-b91d-11eb-83c9-2427389052bd.png)
