@@ -6,17 +6,21 @@ _Decision trees 10.1/
 1.10.1 Classification:_
 https://scikit-learn.org/stable/modules/tree.html
 
-_Everything you need to know about Min-Max normalization:_
-https://towardsdatascience.com/everything-you-need-to-know-about-min-max-normalization-in-python-b79592732b79
-
-_How to One Hot Encode Sequence Data in Python:_
-https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/
-
 _Scikit-Learn Decision Trees Explained:_
 https://towardsdatascience.com/scikit-learn-decision-trees-explained-803f3812290d
 
 _Understanding the decision tree structure:_
 https://scikit-learn.org/stable/auto_examples/tree/plot_unveil_tree_structure.html
+
+#### Preprocessing 1: Feature Scaling
+_Everything you need to know about Min-Max normalization:_
+https://towardsdatascience.com/everything-you-need-to-know-about-min-max-normalization-in-python-b79592732b79
+
+#### Preprocessing 2: 1 Hot Encoding
+_How to One Hot Encode Sequence Data in Python:_
+https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/
+
+
 
 
 ## iris classification tree with depth=5
