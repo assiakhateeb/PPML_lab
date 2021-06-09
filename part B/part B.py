@@ -130,7 +130,7 @@ leaves_value_list = []
 for l in leaves:
     leaves_value_list.append(Dtree.tree_.value[l])
 leaves_value_list = np.array(leaves_value_list)
-# print(leaves_value_list)
+#print(leaves_value_list)
 
 ohe = []
 for val in leaves_value_list:
@@ -186,26 +186,23 @@ myline = np.linspace(-2, 2, 40)
 # plt.scatter(X, Y)
 plt.plot(myline, p(myline))
 
-leaves = list(leaves)
-def Tree_Predict(v,x):
-    if v in leaves:
-        for i in range(len(leaves)):
-            if (leaves_value_list[i].all() == (mytree.tree.tree_.value[leaves[i]]).all()): # checs node's index in original tree and returns one hot encoding of this value
-                return mytree.leaf_value[i]
+n_nodes = mytree.tree.tree_.node_count
 
-    return Tree_Predict(v,x)
+indexes = leftChild = mytree.tree.tree_.children_left
+print(indexes)
 
+def Tree_Predict(v,x,i):
+       if v.tree.tree_.value[i] in leaves_value_list: # return the leaf's index in original tree
+            index = np.where(leaves_value_list==v.tree.tree_.value[i])
+            return v.leaf_value[index]
 
+       else:
+           return p(X_train[v.tree.tree_.feature[i]])*Tree_Predict(v.left,x,i+1) + p(X_train[v.tree.tree_.feature[i]])*Tree_Predict(v.right,x,i+1)
 
 
 'v= mytree, x= X_train'
-# Tree_Predict(mytree,X_train)
-print(leaves)
+Tree_Predict(mytree,X_train,0)
 
-
-
-leaves = list(leaves)
-for i in range(len(leaves)):
-    if (leaves_value_list[i].all() == (mytree.tree.tree_.value[leaves[i]]).all()):
-         print(mytree.leaf_value[i])
+# leaves -> indexes of leaves in original tree , leaf_value -> leaves values after ohe , leaves_list_value -> leaves values before
+# X_train -> X data after ohe
 
