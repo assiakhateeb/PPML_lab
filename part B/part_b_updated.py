@@ -64,7 +64,7 @@ def print_tree(d_tree):
     plt.show()
 
 
-def polynom():
+def polynom(degree, window):
     # numpy.linspace(start, stop, num_of_samples); Returns num evenly spaced samples,
     # calculated over the interval [start, stop]
     X = np.linspace(-2, 2, num=401)
@@ -76,18 +76,18 @@ def polynom():
     y3 = np.ones(200)
     Y = np.concatenate((y1, y2, y3), axis=None)
     # weights functions
-    w1 = np.concatenate(((2 / 7) * (np.ones(150)), np.zeros(101)), axis=None)
+    w1 = np.concatenate((window * (np.ones(150)), np.zeros(101)), axis=None)
 
     # 7/2 is godel of range [0.25,2] + [-2,-0.25]
     # the first 150 values ([-2,0.25]) have a weight of 2/7
     # the next 101 values ([-0.25,0.25]) have a weight of 0
     # the last 150 values ([0.25,2]) have a weight of 2/7
     # weight = np.concatenate((partW1, (2/7)*np.ones(75)), axis=None)
-    w2 = (2 / 7) * np.ones(150)
+    w2 = window * np.ones(150)
     weight = np.concatenate((w1, w2), axis=None)
     # we use the above function in polyfit to help calculate the polynome
     # polyfit(x, y, deg, w); least square polynomial fit
-    pf = np.polyfit(X, Y, 34, w=weight)
+    pf = np.polyfit(X, Y, degree, w=weight)
     # print(pf)
     # poly1d(c_or_r); The polynomial’s coefficients in decreasing powers
     phi = np.poly1d(pf)
@@ -135,7 +135,9 @@ def pre_processing():
     # pred_vec = [5, 5, 2.6, 1.5]
     # sklearn_prediction(d_tree, pred_vec, data_set)
     '-------pre_processing 2 - Polynom-------'
-    phi = polynom()
+    deg = 34
+    win = 2/7
+    phi = polynom(deg, win)
     '-------pre_processing 3 - make our tree -------'
     myTree = builtTree(d_tree)
     return myTree, phi
