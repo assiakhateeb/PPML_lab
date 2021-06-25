@@ -144,10 +144,10 @@ w2 = (2 / 7) * np.ones(150)
 weight = np.concatenate((w1, w2), axis=None)
 # we use the above function in polyfit to help calculate the polynome
 # polyfit(x, y, deg, w); least square polynomial fit
-pf = np.polyfit(X, Y, 32, w=weight)
+pf = np.polyfit(X, Y, 34, w=weight)
 # print(pf)
 # poly1d(c_or_r); The polynomial’s coefficients in decreasing powers
-p = np.poly1d(pf)
+phi = np.poly1d(pf)
 # print(p)
 myline = np.linspace(-2, 2, 401)
 # plt.scatter(X, Y)
@@ -155,58 +155,7 @@ myline = np.linspace(-2, 2, 401)
 # plt.show()
 ' --------------------------------------------------------------------------'
 
-# leaves = list(leaves)
 
-
-# def Tree_Predict(v, x):
-#     if v in leaves:
-#         for i in range(len(leaves)):
-#             if (leaves_value_list[i].all() == (mytree.tree.tree_.value[
-#                 leaves[i]]).all()):  # checs node's index in original tree and returns one hot encoding of this value
-#                 return mytree.leaf_value[i]
-#
-#     return Tree_Predict(v, x)
-
-
-# 'v= mytree, x= X_train'
-# # Tree_Predict(mytree,X_train)
-# print(leaves)
-#
-# leaves = list(leaves)
-# for i in range(len(leaves)):
-#     if (leaves_value_list[i].all() == (mytree.tree.tree_.value[leaves[i]]).all()):
-#         print(mytree.leaf_value[i])
-
-# def Tree_Predict(v):
-#     n_nodes = v.tree_.node_count
-#     children_left = v.tree_.children_left
-#     children_right = v.tree_.children_right
-#     feature = v.tree_.feature
-#     threshold = v.tree_.threshold
-#
-#     node_depth = np.zeros(shape=n_nodes, dtype=np.int64)
-#     is_leaves = np.zeros(shape=n_nodes, dtype=bool)
-#     stack = [(0, 0)]  # start with the root node id (0) and its depth (0)
-#     while len(stack) > 0:
-#         # `pop` ensures each node is only visited once
-#         node_id, depth = stack.pop()
-#         node_depth[node_id] = depth
-#
-#         # If the left and right child of a node is not the same we have a split
-#         # node
-#         is_split_node = children_left[node_id] != children_right[node_id]
-#         # If a split node, append left and right children and depth to `stack`
-#         # so we can loop through them
-#         if is_split_node:
-#             stack.append((children_left[node_id], depth + 1))
-#             stack.append((children_right[node_id], depth + 1))
-#         else:
-#             is_leaves[node_id] = True
-#         print(stack)
-#     print(node_id)
-#
-#
-# Tree_Predict(mytree.tree)
 
 fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
 cn = ['setosa', 'versicolor', 'virginica']
@@ -231,17 +180,17 @@ printTree(DT)
 # data = [0.61, -0.16, 0.62, 0.25]
 # sample_data1 = int(Dtree.predict([[0.61, -0.16, 0.62, 0.25]]))
 # print(iris.target_names[sample_data1])
-data = [-0.333333, -0.80000, 0.9, -0.073333]
-sample_data1 = int(Dtree.predict([data]))
-print(iris.target_names[sample_data1])
+data = [0.333333, 0.50000, 0.9, -0.173333]
+# sample_data1 = int(Dtree.predict([data]))
+# print(iris.target_names[sample_data1])
 print('new fun')
 
 
-def Tree_Predict(DT, depth=0):
-    if DT is None:
+def Tree_Predict(T, x, depth=0):
+    if T is None:
         return
 
-    feature, threshold, leaf, left, right = DT.getNode()
+    feature, threshold, leaf, left, right = T.getNode()
 
     if isinstance(leaf, np.ndarray):
         # print(depth * ' ', 'leaf = ', leaf)
@@ -249,18 +198,18 @@ def Tree_Predict(DT, depth=0):
     else:
         # print('phi1=', p(data[feature] - threshold))
         # print('phi2=', p(threshold - data[feature]))
-        return (p(data[feature] - threshold)) * Tree_Predict(right, depth + 4) + (
-            p(threshold - data[feature])) * Tree_Predict(left, depth + 4)
+        return (phi(x[feature] - threshold)) * Tree_Predict(right, x, depth + 4) + (
+            phi(threshold - x[feature])) * Tree_Predict(left, x, depth + 4)
 
 
-def predict():
-    prediction_vec = Tree_Predict(DT)
-    print(prediction_vec)
-    lenHot = len(prediction_vec)
-    l = np.argmax(prediction_vec)
+def predict(T, x):
+    pred_vec = Tree_Predict(T, x)
+    print(pred_vec)
+    lenHot = len(pred_vec)
+    l = np.argmax(pred_vec)
     leaf = np.zeros(lenHot)
     leaf[l] = 1
     return leaf
 
 
-print(predict())
+print(predict(DT, data))
