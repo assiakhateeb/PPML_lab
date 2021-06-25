@@ -7,13 +7,11 @@ from sklearn.model_selection import train_test_split
 from sklearn import tree
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import OneHotEncoder
 from sklearn.base import clone
+from my_tree import *
 
 iris = load_iris()
-# print(iris)
 X = pd.DataFrame(iris.data[:, :], columns=iris.feature_names[:])
-# print(X)
 
 """ preprocessing 1 - Feature scaling """
 # rescale a range between an arbitrary set of values [a, b] where a=-1, b=1
@@ -31,29 +29,13 @@ Y_rescaled_features = pd.DataFrame(Y_rescaled_features, columns=["Species"])
 
 X_train, X_test, Y_train, Y_test = train_test_split(X_rescaled_features, Y_rescaled_features, test_size=0.25)
 # Now let's fit a DecisionTreeClassifier instance
-Dtree = DecisionTreeClassifier(max_depth=5)
+Dtree = DecisionTreeClassifier(max_depth=2)
 Dtree.fit(X_train, Y_train)
 
 """calculate the score"""
 s = Dtree.score(X_test, Y_test)
 # print("\n", "score=", s, "\n")
 
-# Visualizing the build Decision tree
-# from sklearn.tree import export_graphviz
-#
-# """ gini is a measure that is used to find a node to split on it
-#     samples refer to the number of samples that are entering this node
-#     value is a split of the data instances according to their class
-#      example: value = [instances_num_of_setosa, instances_num_of_versicolor, instances_num_of_virginica
-#     class is what the decision tree would predict
-# """
-# # Creates dot file named tree.dot
-# export_graphviz(Dtree, out_file="myTree.dot", feature_names=list(X.columns),
-#                 class_names=iris.target_names,
-#                 filled=True, rounded=True)
-#
-# # convert .dot file to png
-# """ https://onlineconvertfree.com/complete/dot-png/ """
 
 ' Making a Prediction on a new sample '
 sample_data1 = int(Dtree.predict([[5, 5, 1, 3]]))
@@ -75,28 +57,17 @@ sample_data1 = int(Dtree.predict([[5, 5, 15, 5]]))
 #     value = [instances_num_of_setosa, instances_num_of_versicolor, instances_num_of_virginica]
 #     class is what the decision tree would predict
 
-fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
-cn = ['setosa', 'versicolor', 'virginica']
-
-# Setting dpi = 300 to make image clearer than default
-fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=300)
-
-tree.plot_tree(Dtree,
-               feature_names=fn,
-               class_names=cn,
-               filled=True);
-
-# onehot_encoder = OneHotEncoder(sparse=False)
-# y_onehot = onehot_encoder.fit_transform(Y_train)
-# one_hot_tree = DecisionTreeClassifier(max_depth=5)
-# one_hot_tree.fit(X_train, y_onehot)
-# tree.plot_tree(one_hot_tree)
-# plt.show()
-# print(y_onehot.shape)
-# print(Y_rescaled_features[0:5], "\n")
-# print(y_onehot[1:5], "\n")
+# fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+# cn = ['setosa', 'versicolor', 'virginica']
 #
-# print(y_onehot[50], "\n")
+# # Setting dpi = 300 to make image clearer than default
+# fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=300)
+#
+# tree.plot_tree(Dtree,
+#                feature_names=fn,
+#                class_names=cn,
+#                filled=True);
+# plt.show()
 
 
 values = np.array(Dtree.tree_.value)
@@ -108,13 +79,6 @@ for val in values:
     ohe.append(one_hot_encoding)
     # print("enc= ", one_hot_encoding)
 
-
-# print(ohe)
-# a = Dtree.tree_.value
-# print(Dtree.tree_.max_depth)
-# # for i in a:
-#     print(Dtree.tree_.value[i])
-# Dtree.tree_.value = ohe
 
 def find_leaves(X, clf):
     """A function to find leaves of a DecisionTreeClassifier
@@ -130,7 +94,7 @@ leaves_value_list = []
 for l in leaves:
     leaves_value_list.append(Dtree.tree_.value[l])
 leaves_value_list = np.array(leaves_value_list)
-#print(leaves_value_list)
+# print(leaves_value_list)
 
 ohe = []
 for val in leaves_value_list:
@@ -139,22 +103,25 @@ for val in leaves_value_list:
     ohe.append(one_hot_encoding)
 
 ohe = np.array(ohe)
+
+
 # print(ohe)
 
 class T:
     tree = clone(Dtree)
-    leaf_value = ohe
+    ohe_leaf_value = ohe
+
 
 mytree = T()
-mytree.tree.fit(X_train,Y_train)
+mytree.tree.fit(X_train, Y_train)
 
-# print(mytree.leaf_value)
-# tree.plot_tree(mytree.tree)
-
-print("feature=", mytree.tree.tree_.feature)
+features = mytree.tree.tree_.feature
+# print("feature=", features)
+# features = set(features)
+# print( "f=",features)
 # print(mytree.tree_.value)
 
-# polynom
+' polynom --------------------------------------------------------------------'
 # numpy.linspace(start, stop, num_of_samples); Returns num evenly spaced samples,
 # calculated over the interval [start, stop]
 X = np.linspace(-2, 2, num=401)
@@ -182,27 +149,108 @@ pf = np.polyfit(X, Y, 32, w=weight)
 # poly1d(c_or_r); The polynomial’s coefficients in decreasing powers
 p = np.poly1d(pf)
 # print(p)
-myline = np.linspace(-2, 2, 40)
+myline = np.linspace(-2, 2, 401)
 # plt.scatter(X, Y)
-plt.plot(myline, p(myline))
+# plt.plot(myline, p(myline))
+# plt.show()
+' --------------------------------------------------------------------------'
 
-n_nodes = mytree.tree.tree_.node_count
-
-indexes = leftChild = mytree.tree.tree_.children_left
-print(indexes)
-
-def Tree_Predict(v,x,i):
-       if v.tree.tree_.value[i] in leaves_value_list: # return the leaf's index in original tree
-            index = np.where(leaves_value_list==v.tree.tree_.value[i])
-            return v.leaf_value[index]
-
-       else:
-           return p(X_train[v.tree.tree_.feature[i]])*Tree_Predict(v.left,x,i+1) + p(X_train[v.tree.tree_.feature[i]])*Tree_Predict(v.right,x,i+1)
+# leaves = list(leaves)
 
 
-'v= mytree, x= X_train'
-Tree_Predict(mytree,X_train,0)
+# def Tree_Predict(v, x):
+#     if v in leaves:
+#         for i in range(len(leaves)):
+#             if (leaves_value_list[i].all() == (mytree.tree.tree_.value[
+#                 leaves[i]]).all()):  # checs node's index in original tree and returns one hot encoding of this value
+#                 return mytree.leaf_value[i]
+#
+#     return Tree_Predict(v, x)
 
-# leaves -> indexes of leaves in original tree , leaf_value -> leaves values after ohe , leaves_list_value -> leaves values before
-# X_train -> X data after ohe
 
+# 'v= mytree, x= X_train'
+# # Tree_Predict(mytree,X_train)
+# print(leaves)
+#
+# leaves = list(leaves)
+# for i in range(len(leaves)):
+#     if (leaves_value_list[i].all() == (mytree.tree.tree_.value[leaves[i]]).all()):
+#         print(mytree.leaf_value[i])
+
+# def Tree_Predict(v):
+#     n_nodes = v.tree_.node_count
+#     children_left = v.tree_.children_left
+#     children_right = v.tree_.children_right
+#     feature = v.tree_.feature
+#     threshold = v.tree_.threshold
+#
+#     node_depth = np.zeros(shape=n_nodes, dtype=np.int64)
+#     is_leaves = np.zeros(shape=n_nodes, dtype=bool)
+#     stack = [(0, 0)]  # start with the root node id (0) and its depth (0)
+#     while len(stack) > 0:
+#         # `pop` ensures each node is only visited once
+#         node_id, depth = stack.pop()
+#         node_depth[node_id] = depth
+#
+#         # If the left and right child of a node is not the same we have a split
+#         # node
+#         is_split_node = children_left[node_id] != children_right[node_id]
+#         # If a split node, append left and right children and depth to `stack`
+#         # so we can loop through them
+#         if is_split_node:
+#             stack.append((children_left[node_id], depth + 1))
+#             stack.append((children_right[node_id], depth + 1))
+#         else:
+#             is_leaves[node_id] = True
+#         print(stack)
+#     print(node_id)
+#
+#
+# Tree_Predict(mytree.tree)
+
+fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+cn = ['setosa', 'versicolor', 'virginica']
+
+# Setting dpi = 300 to make image clearer than default
+# fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(5, 4), dpi=300)
+# fig = plt.figure(figsize=(25,20))
+fig, axes = plt.subplots(figsize=(4, 1), dpi=300)
+tree.plot_tree(Dtree,
+               feature_names=fn,
+               class_names=cn,
+               filled=True,
+               )
+# plt.show()
+
+
+DT = builtTree(Dtree)
+
+# DT.getNode()
+printTree(DT)
+
+# data = [0.61, -0.16, 0.62, 0.25]
+# sample_data1 = int(Dtree.predict([[0.61, -0.16, 0.62, 0.25]]))
+# print(iris.target_names[sample_data1])
+data = [-0.333333, -0.80000, 0.9, -0.073333]
+sample_data1 = int(Dtree.predict([data]))
+print(iris.target_names[sample_data1])
+print('new fun')
+
+
+def Tree_Predict(DT, depth=0):
+    if DT is None:
+        return
+
+    feature, threshold, leaf, left, right = DT.getNode()
+
+    if isinstance(leaf, np.ndarray):
+        # print(depth * ' ', 'leaf = ', leaf)
+        return leaf
+    else:
+        print('phi1=', p(data[feature] - threshold))
+        print('phi2=', p(threshold - data[feature]))
+        return (p(data[feature] - threshold)) * Tree_Predict(right, depth + 4) + (
+            p(threshold - data[feature])) * Tree_Predict(left, depth + 4)
+
+
+print(Tree_Predict(DT))
