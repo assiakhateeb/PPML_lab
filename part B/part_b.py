@@ -41,8 +41,8 @@ def make_decision_tree(X_rescaled_features, Y):
 
 def sklearn_score(sklearn_tree, X_test, Y_test):
     'calculate the score'
-    s = sklearn_tree.score(X_test, Y_test)
-    print("sklearn_score =", s)
+    s = sklearn_tree.score(X_test, Y_test)*100
+    print('sklearn_score =%.5f' % s, '%')
     return s
 
 
@@ -169,8 +169,8 @@ def calc_algorithm1_accuracy(myTree, phi, X_test, Y_test):
         if np.logical_and(res_vec[i] == [1, 0, 0], Y_test[i] == 0).all() or np.logical_and(res_vec[i] == [0, 1, 0], Y_test[i] == 1).all() or np.logical_and(res_vec[i] == [0, 0, 1], Y_test[i] == 2).all():
             counter += 1
 
-    algorithm1_score = counter / len(res_vec)
-    print('algorithm1_score =', algorithm1_score)
+    algorithm1_score = (counter / len(res_vec))*100
+    print('algorithm1_score =%.5f' % algorithm1_score, '%')
     return algorithm1_score
 
 
