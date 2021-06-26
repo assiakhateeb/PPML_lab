@@ -1,11 +1,10 @@
-import numpy as np
 import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.datasets import load_wine
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-from sklearn import tree
 import matplotlib.pyplot as plt
+from sklearn import tree
 from sklearn.preprocessing import MinMaxScaler
 from my_tree import *
 
@@ -15,8 +14,10 @@ def load_data(data_set):
         data_set = load_iris()
     if data_set == 'wine':
         data_set = load_wine()
-    X = pd.DataFrame(data_set.data[:, :], columns=data_set.feature_names[:])
-    Y = pd.DataFrame(data_set.target, columns=["Species"])
+    # X = pd.DataFrame(data_set.data[:, :], columns=data_set.feature_names[:])
+    # Y = pd.DataFrame(data_set.target, columns=["Species"])
+    X = data_set.data[:, :]
+    Y = data_set.target
     return X, Y, data_set
 
 
@@ -25,7 +26,7 @@ def scaling(X, data_set):
     # rescale a range between an arbitrary set of values [a, b] where a=-1, b=1
     scaler = MinMaxScaler(feature_range=(-1, 1))
     X_rescaled_features = scaler.fit_transform(X)
-    X_rescaled_features = pd.DataFrame(X_rescaled_features[:, :], columns=data_set.feature_names[:])
+    # X_rescaled_features = pd.DataFrame(X_rescaled_features[:, :], columns=data_set.feature_names[:])
     return X_rescaled_features
 
 
@@ -37,9 +38,9 @@ def make_decision_tree(X_rescaled_features, Y):
     return d_tree, X_test, Y_test
 
 
-def sklearn_score(d_tree, X_test, Y_test):
+def sklearn_score(sklearn_tree, X_test, Y_test):
     'calculate the score'
-    s = d_tree.score(X_test, Y_test)
+    s = sklearn_tree.score(X_test, Y_test)
     print("sklearn_score =", s)
     return s
 
@@ -113,14 +114,14 @@ def Tree_Predict(T, x, phi):
             phi(threshold - x[feature])) * Tree_Predict(left, x, phi)
 
 
-def predict(T, x, phi):
+def algorithm1_predict(T, x, phi):
     pred_vec = Tree_Predict(T, x, phi)
-    print('predict vec before 1Hot_encoding is:', pred_vec)
+    # print('predict vec before 1Hot_encoding is:', pred_vec)
     lenHot = len(pred_vec)
     l = np.argmax(pred_vec)
     leaf = np.zeros(lenHot)
     leaf[l] = 1
-    print('predict vector with Algorithm 1 is:', leaf)
+    # print('predict vector with Algorithm 1 is:', leaf)
     return leaf
 
 
@@ -129,38 +130,56 @@ def pre_processing(data_type):
     X, Y, data_set = load_data(data_type)
     '-------pre_processing 1 - Scaling-------'
     X_rescaled_features = scaling(X, data_set)
-    d_tree, X_test, Y_test = make_decision_tree(X_rescaled_features, Y)
-    '-------calc_Score-------'
-    sklearn_score(d_tree, X_test, Y_test)
+    sklearn_tree, X_test, Y_test = make_decision_tree(X_rescaled_features, Y)
+
     '-------predict with sklearn-------'
     if data_type == 'iris':
         pred_vec = [5, 5, 2.6, 1.5]
     if data_type == 'wine':
-        pred_vec = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940, 0.351536,
-            -0.788618, -0.758242, -0.597718]
+        pred_vec = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940,
+                    0.351536,
+                    -0.788618, -0.758242, -0.597718]
+        pred_vec = [0.684211, 0.616601, 0.144385, 0.484536, 0.239130, 0.255172, 0.147679, 0.433962, 0.186120, 0.255973,
+                    0.089431, 0.941392, 0.122682]
 
-    sklearn_prediction(d_tree, pred_vec, data_set)
+    # sklearn_prediction(d_tree, pred_vec, data_set)
     '-------pre_processing 2 - Polynom-------'
     deg = 34
-    win = 2/7
+    win = 2 / 7
     phi = polynom(deg, win)
     '-------pre_processing 3 - make our tree -------'
-    myTree = builtTree(d_tree)
-    return myTree, phi
+    myTree = builtTree(sklearn_tree)
+
+    return myTree, phi, X_test, Y_test, sklearn_tree
+
+
+def calc_algorithm1_accuracy(myTree, phi, X_test, Y_test):
+    res_vec = []
+    counter, counter2 = 0, 0
+    for x in X_test:
+        res = algorithm1_predict(myTree, x, phi)
+        res_vec.append(res)
+
+    for i in range(len(res_vec)):
+        if np.logical_and(res_vec[i] == [1, 0, 0], Y_test[i] == 0).all() or np.logical_and(res_vec[i] == [0, 1, 0], Y_test[i] == 1).all() or np.logical_and(res_vec[i] == [0, 0, 1], Y_test[i] == 2).all():
+            counter += 1
+
+    algorithm1_score = counter / len(res_vec)
+    print('algorithm1_score=', algorithm1_score)
+    return algorithm1_score
 
 
 def main():
     data_type = 'wine'
     print('data_type =', data_type)
-    myTree, phi = pre_processing(data_type)
+    myTree, phi, X_test, Y_test, sklearn_tree = pre_processing(data_type)
     print('\n', '--------print tree--------')
     printTree(myTree)
     print('\n', '--------now prediction--------')
-    if data_type == 'iris':
-        data = [0.333333, 0.50000, 0.9, -0.173333]
-    if data_type == 'wine':
-        data = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940, 0.351536, -0.788618, -0.758242, -0.597718]
-    predict(myTree, data, phi)
+
+    sklearn_score(sklearn_tree, X_test, Y_test)
+    calc_algorithm1_accuracy(myTree, phi, X_test, Y_test)
 
 
-main()
+if __name__ == '__main__':
+    main()
