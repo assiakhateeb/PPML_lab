@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.datasets import load_iris
+from sklearn.datasets import load_wine
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn import tree
@@ -12,6 +13,8 @@ from my_tree import *
 def load_data(data_set):
     if data_set == 'iris':
         data_set = load_iris()
+    if data_set == 'wine':
+        data_set = load_wine()
     X = pd.DataFrame(data_set.data[:, :], columns=data_set.feature_names[:])
     Y = pd.DataFrame(data_set.target, columns=["Species"])
     return X, Y, data_set
@@ -29,7 +32,7 @@ def scaling(X, data_set):
 def make_decision_tree(X_rescaled_features, Y):
     X_train, X_test, Y_train, Y_test = train_test_split(X_rescaled_features, Y, test_size=0.25)
     ' Now lets fit a DecisionTreeClassifier instance '
-    d_tree = DecisionTreeClassifier(max_depth=2)
+    d_tree = DecisionTreeClassifier(max_depth=3)
     d_tree.fit(X_train, Y_train)
     return d_tree, X_test, Y_test
 
@@ -45,7 +48,7 @@ def sklearn_prediction(d_tree, pred_vec, data_set_name):
     'Making a Prediction on a new sample'
     d = data_set_name
     sample_data1 = int(d_tree.predict([pred_vec]))
-    print(d.target_names[sample_data1])
+    print('sklearn_prediction =', d.target_names[sample_data1])
 
 
 def print_tree(d_tree):
@@ -102,7 +105,6 @@ def polynom(degree, window):
 def Tree_Predict(T, x, phi):
     if T is None:
         return
-
     feature, threshold, leaf, left, right = T.getNode()
     if isinstance(leaf, np.ndarray):
         return leaf
@@ -122,9 +124,8 @@ def predict(T, x, phi):
     return leaf
 
 
-def pre_processing():
+def pre_processing(data_type):
     'load_data'
-    data_type = 'iris'
     X, Y, data_set = load_data(data_type)
     '-------pre_processing 1 - Scaling-------'
     X_rescaled_features = scaling(X, data_set)
@@ -132,8 +133,13 @@ def pre_processing():
     '-------calc_Score-------'
     sklearn_score(d_tree, X_test, Y_test)
     '-------predict with sklearn-------'
-    # pred_vec = [5, 5, 2.6, 1.5]
-    # sklearn_prediction(d_tree, pred_vec, data_set)
+    if data_type == 'iris':
+        pred_vec = [5, 5, 2.6, 1.5]
+    if data_type == 'wine':
+        pred_vec = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940, 0.351536,
+            -0.788618, -0.758242, -0.597718]
+
+    sklearn_prediction(d_tree, pred_vec, data_set)
     '-------pre_processing 2 - Polynom-------'
     deg = 34
     win = 2/7
@@ -144,11 +150,16 @@ def pre_processing():
 
 
 def main():
-    myTree, phi = pre_processing()
+    data_type = 'wine'
+    print('data_type =', data_type)
+    myTree, phi = pre_processing(data_type)
     print('\n', '--------print tree--------')
     printTree(myTree)
     print('\n', '--------now prediction--------')
-    data = [0.333333, 0.50000, 0.9, -0.173333]
+    if data_type == 'iris':
+        data = [0.333333, 0.50000, 0.9, -0.173333]
+    if data_type == 'wine':
+        data = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940, 0.351536, -0.788618, -0.758242, -0.597718]
     predict(myTree, data, phi)
 
 
