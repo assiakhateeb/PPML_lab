@@ -33,7 +33,7 @@ def scaling(X, data_set):
 def make_decision_tree(X_rescaled_features, Y):
     X_train, X_test, Y_train, Y_test = train_test_split(X_rescaled_features, Y, test_size=0.25)
     ' Now lets fit a DecisionTreeClassifier instance '
-    d_tree = DecisionTreeClassifier(max_depth=3)
+    d_tree = DecisionTreeClassifier(max_depth=5)
     d_tree.fit(X_train, Y_train)
     return d_tree, X_test, Y_test
 
@@ -52,15 +52,18 @@ def sklearn_prediction(d_tree, pred_vec, data_set_name):
     print('sklearn_prediction =', d.target_names[sample_data1])
 
 
-def print_tree(d_tree):
-    fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
-    cn = ['setosa', 'versicolor', 'virginica']
-
+def print_tree(sklearn_tree, data_type):
+    if data_type == 'iris':
+        fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+        cn = ['setosa', 'versicolor', 'virginica']
+    if data_type == 'wine':
+        fn = ['alcohol', 'malic_acid', 'ash', 'alcalinity_of_ash', 'magnesium', 'total_phenols', 'flavanoids',
+              'nonflavanoid_phenols', 'proanthocyanins', 'color_intensity', 'hue', 'od280/od315_of_diluted_wines',
+              'proline']
+        cn = ['class_0', 'class_1', 'class_2']
     # Setting dpi = 300 to make image clearer than default
-    # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(5, 4), dpi=300)
-    # fig = plt.figure(figsize=(25,20))
-    fig, axes = plt.subplots(figsize=(4, 1), dpi=300)
-    tree.plot_tree(d_tree,
+    fig, axes = plt.subplots(figsize=(4, 2), dpi=300)
+    tree.plot_tree(sklearn_tree,
                    feature_names=fn,
                    class_names=cn,
                    filled=True,
@@ -170,7 +173,7 @@ def calc_algorithm1_accuracy(myTree, phi, X_test, Y_test):
 
 
 def main():
-    data_type = 'wine'
+    data_type = 'iris'
     print('data_type =', data_type)
     myTree, phi, X_test, Y_test, sklearn_tree = pre_processing(data_type)
     print('\n', '--------print tree--------')
@@ -179,6 +182,7 @@ def main():
 
     sklearn_score(sklearn_tree, X_test, Y_test)
     calc_algorithm1_accuracy(myTree, phi, X_test, Y_test)
+    print_tree(sklearn_tree, data_type)
 
 
 if __name__ == '__main__':
