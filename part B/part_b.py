@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.datasets import load_wine
+from sklearn.datasets import load_breast_cancer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
@@ -15,6 +16,8 @@ def load_data(data_set):
         data_set = load_iris()
     if data_set == 'wine':
         data_set = load_wine()
+    if data_set == 'cancer':
+        data_set = load_breast_cancer()
     # X = pd.DataFrame(data_set.data[:, :], columns=data_set.feature_names[:])
     # Y = pd.DataFrame(data_set.target, columns=["Species"])
     X = data_set.data[:, :]
@@ -34,7 +37,7 @@ def scaling(X, data_set):
 def make_decision_tree(X_rescaled_features, Y):
     X_train, X_test, Y_train, Y_test = train_test_split(X_rescaled_features, Y, test_size=0.25)
     ' Now lets fit a DecisionTreeClassifier instance '
-    d_tree = DecisionTreeClassifier(max_depth=4)
+    d_tree = DecisionTreeClassifier(max_depth=3)
     d_tree.fit(X_train, Y_train)
     return d_tree, X_test, Y_test
 
@@ -55,21 +58,35 @@ def sklearn_prediction(d_tree, pred_vec, data_set_name):
 
 def print_tree(sklearn_tree, data_type):
     if data_type == 'iris':
-        fn = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
-        cn = ['setosa', 'versicolor', 'virginica']
+        feature_names = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+        target_names = ['setosa', 'versicolor', 'virginica']
     if data_type == 'wine':
-        fn = ['alcohol', 'malic_acid', 'ash', 'alcalinity_of_ash', 'magnesium', 'total_phenols', 'flavanoids',
+        feature_names = ['alcohol', 'malic_acid', 'ash', 'alcalinity_of_ash', 'magnesium', 'total_phenols', 'flavanoids',
               'nonflavanoid_phenols', 'proanthocyanins', 'color_intensity', 'hue', 'od280/od315_of_diluted_wines',
               'proline']
-        cn = ['class_0', 'class_1', 'class_2']
+        target_names = ['class_0', 'class_1', 'class_2']
+    if data_type == 'cancer':
+        feature_names = ['mean radius', 'mean texture', 'mean perimeter', 'mean area',
+        'mean smoothness', 'mean compactness', 'mean concavity',
+        'mean concave points', 'mean symmetry', 'mean fractal dimension',
+        'radius error', 'texture error', 'perimeter error', 'area error',
+        'smoothness error', 'compactness error', 'concavity error',
+        'concave points error', 'symmetry error',
+        'fractal dimension error', 'worst radius', 'worst texture',
+        'worst perimeter', 'worst area', 'worst smoothness',
+        'worst compactness', 'worst concavity', 'worst concave points',
+        'worst symmetry', 'worst fractal dimension']
+        target_names = ['malignant', 'benign']
     # Setting dpi = 300 to make image clearer than default
     fig, axes = plt.subplots(figsize=(4, 2), dpi=300)
     tree.plot_tree(sklearn_tree,
-                   feature_names=fn,
-                   class_names=cn,
+                   feature_names=feature_names,
+                   class_names=target_names,
                    filled=True,
                    )
+    fig.savefig(data_type+' tree.jpg')
     plt.show()
+    # plt.close('all')
 
 
 def polynom(degree, window):
@@ -137,14 +154,14 @@ def pre_processing(data_type):
     sklearn_tree, X_test, Y_test = make_decision_tree(X_rescaled_features, Y)
 
     '-------predict with sklearn-------'
-    if data_type == 'iris':
-        pred_vec = [5, 5, 2.6, 1.5]
-    if data_type == 'wine':
-        pred_vec = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940,
-                    0.351536,
-                    -0.788618, -0.758242, -0.597718]
-        pred_vec = [0.684211, 0.616601, 0.144385, 0.484536, 0.239130, 0.255172, 0.147679, 0.433962, 0.186120, 0.255973,
-                    0.089431, 0.941392, 0.122682]
+    # if data_type == 'iris':
+    #     pred_vec = [5, 5, 2.6, 1.5]
+    # if data_type == 'wine':
+    #     pred_vec = [0.631579, 0.328063, 0.475936, 0.432990, -0.434783, -0.262069, -0.822785, 0.622642, -0.406940,
+    #                 0.351536,
+    #                 -0.788618, -0.758242, -0.597718]
+    #     pred_vec = [0.684211, 0.616601, 0.144385, 0.484536, 0.239130, 0.255172, 0.147679, 0.433962, 0.186120, 0.255973,
+    #                 0.089431, 0.941392, 0.122682]
 
     # sklearn_prediction(d_tree, pred_vec, data_set)
     '-------pre_processing 2 - Polynom-------'
@@ -153,7 +170,6 @@ def pre_processing(data_type):
     phi = polynom(deg, win)
     '-------pre_processing 3 - make our tree -------'
     myTree = builtTree(sklearn_tree)
-
     return myTree, phi, X_test, Y_test, sklearn_tree
 
 
@@ -165,10 +181,14 @@ def calc_algorithm1_accuracy(myTree, phi, X_test, Y_test):
         res = algorithm1_predict(myTree, x, phi)
         res_vec.append(res)
     print("run time =%.4f" % (time() - startTime), "seconds")
-    for i in range(len(res_vec)):
-        if np.logical_and(res_vec[i] == [1, 0, 0], Y_test[i] == 0).all() or np.logical_and(res_vec[i] == [0, 1, 0], Y_test[i] == 1).all() or np.logical_and(res_vec[i] == [0, 0, 1], Y_test[i] == 2).all():
-            counter += 1
-
+    if len(res_vec[0]) == 3:
+        for i in range(len(res_vec)):
+            if np.logical_and(res_vec[i] == [1, 0, 0], Y_test[i] == 0).all() or np.logical_and(res_vec[i] == [0, 1, 0], Y_test[i] == 1).all() or np.logical_and(res_vec[i] == [0, 0, 1], Y_test[i] == 2).all():
+                counter += 1
+    if len(res_vec[0]) == 2:
+        for i in range(len(res_vec)):
+            if np.logical_and(res_vec[i] == [1, 0], Y_test[i] == 0).all() or np.logical_and(res_vec[i] == [0, 1], Y_test[i] == 1).all():
+                counter += 1
     algorithm1_score = (counter / len(res_vec))*100
     print('algorithm1_score =%.5f' % algorithm1_score, '%')
     return algorithm1_score
