@@ -55,5 +55,3 @@ def builtTree(clf, node_id=0):
         lenHot = len(value)
         leaf = np.argmax(value)
     return Tree(feature, threshold, leaf, lenHot, left, right)
-
-
