@@ -110,10 +110,8 @@ def polynom(degree, window):
     # the first 150 values ([-2,0.25]) have a weight of 2/7
     # the next 101 values ([-0.25,0.25]) have a weight of 0
     # the last 150 values ([0.25,2]) have a weight of 2/7
-    # weight = np.concatenate((partW1, (2/7)*np.ones(75)), axis=None)
     w2 = window * np.ones(150)
     weight = np.concatenate((w1, w2), axis=None)
-    # we use the above function in polyfit to help calculate the polynome
     # polyfit(x, y, deg, w); least square polynomial fit
     pf = np.polyfit(X, Y, degree, w=weight)
     # print(pf)
