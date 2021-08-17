@@ -26,44 +26,36 @@ def main(argv):
             myTree, phi, X_test, Y_test, scikit_learn_tree = pre_processing_partC(data_type)
             p = np.flip(phi)
 
-            print('phi=', phi)
-            print('p=', p)
-            print('X_test len', len(X_test), "\nY_test", len(Y_test), '\n', 'X_test=', X_test, 'Y_tset=', Y_test)
+            print('X_test = ', X_test)
+            print('Y_test = ', Y_test)
 
             X_test_encrypted = trainset_enc(X_test,context)
-            print("Reeeeeeem")
 
             print('X_test encrypted = ', X_test_encrypted)
 
-            for i in range(len(X_test_encrypted)):
-                decrypted_X_test = X_test_encrypted[i].decrypt(sk).tolist()
-                print(decrypted_X_test)
 
             print('************Tree Predict*************')
             result = []
             for i in range(len(X_test_encrypted)):
                 startTime = time.time()
-                predict = Tree_Predict_partC(myTree, X_test_encrypted[i], phi)
+                sample_tree_predict = Tree_Predict_partC(myTree, X_test_encrypted[i], phi)
                 print("run time =%.4f" % (time.time() - startTime), "seconds")
-                print('predict=', predict.decrypt(sk).tolist())
-                predict = predict.decrypt(sk).tolist()
-                print('Y=', Y_test[i])
-                result.append(predict)
+                sample_tree_predict = sample_tree_predict.decrypt(sk).tolist()
+                print('predict=',sample_tree_predict)
+                result.append(sample_tree_predict)
+
+            print('prediction result = ', result)
 
 
             'one hot encoding to the prediction'
             one_hot_result = []
             for res in result:
-                print(res)
                 one_hot_result.append(one_hot_encoding(res))
-            print('one=', one_hot_result)
-            accuracy = calc_accuracy_partC(one_hot_result, Y_test)
-            print('accuracy=', accuracy)
-            # predict = Tree_Predict_partC(myTree, X_test_encrypted[0], phi)
-            # print(predict.decrypt(sk).tolist())
-            # print(Y_test[0])
 
-            # calc_accuracy_partC(myTree, phi, X_test_encrypted, Y_test)
+            print('one hot encoding, prediction result = ', one_hot_result)
+            accuracy = calc_accuracy_partC(one_hot_result, Y_test)
+            print('prediction accuracy =', accuracy)
+
 
         except:
             print("UnExpected Error: ", sys.exc_info()[0])

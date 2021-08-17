@@ -36,7 +36,6 @@ def Tree_Predict_partC(T, x, phi):
 
 
 def one_hot_encoding(pred_vec):
-    print(pred_vec)
     lenHot = len(pred_vec)
     l = np.argmax(pred_vec)
     leaf = np.zeros(lenHot)
@@ -61,7 +60,6 @@ def trainset_enc(X_test,context):
     pk = context.copy()
     encrypted_Xtest = []
     for vec in X_test:
-        print(vec)
         encrypted_Xtest.append(ts.ckks_tensor(pk, vec))
     return encrypted_Xtest
 
