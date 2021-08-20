@@ -1,0 +1,594 @@
+\documentclass[12pt]{article}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{fdsymbol}
+\usepackage{hyperref}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\renewenvironment{abstract}
+ {\par\noindent\textbf{\abstractname.}\ \ignorespaces}
+ {\par\medskip}
+\providecommand{\keywords}[1]
+{
+  \small	
+  \textbf{\textit{Keywords---}} #1
+}
+\begin{document}
+
+\title{Part D - Prediction with NN}
+
+
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\begin{abstract}
+In part D we implement the prediction of iris species using perceptron neural networks trained on the Iris data set. It includes write-ups of the different types of perceptrons and their accuracy.
+
+\end{abstract}
+
+\keywords{Perceptron: either a single-layer or mutli-layer feed-forward neural network.}
+
+
+
+\section{Introduction}
+Reference to our \href{https://github.com/assiakhateeb/PPML_lab/tree/main/part\%20D}{\textcolor{blue}{Github repo}}.\\
+In part D we'll  describe the                 
+prediction of iris species using two different   perceptron neural networks: a single-layer and multi-layer perceptron.\\ Each perceptron is trained and evaluated on the Iris data set split into train and test sets. 
+
+\section{\small{ARCHITECTURE}}
+The main architecture of the neural networks are based on a single-layer perceptron and a multi-layer perceptron.\\
+Each network was trained using the             
+categorical cross entropy loss function, since the problem consists of multiple classes, and the Adam optimizer, due to its practical advantage over alternatives. \\
+The Iris dataset was split beforehand into train and test sets. It consists of samples of 4 features, sepal length, sepal width, petal length, petal width, with 1 of 3 classes, 1.setosa,               
+2.versicolor,
+3.virginica.
+
+\section{Single-layer Perceptron}
+The single-layer perceptron is modeled with an             
+input layer of 4 nodes, one for each feature, and an                     
+output layer of 3 nodes, one for each class, with a                     
+softmax activation function, since the problem           
+consists of multiple classes.\\ This was chosen to be a                   
+benchmark to see the performance increase with the               
+multi-layer perceptron.\\ This single-layer perceptron should have a very low accuracy due to its extreme                   
+simplicity.    
+
+\section{Multi-layer Perceptron }
+The multi-layer perceptron is modeled with an input               
+layer of 4 nodes, one for each feature, 2 hidden                   
+layers of 10 nodes with a ReLU activation function,                 
+and an output layer of 3 nodes, one for each class,                     
+with a softmax activation function, since the             
+problem consists of multiple classes. ReLU was             
+used due to its practical advantage seen in research                 
+papers. Theoretically, the 2 hidden layers should be               
+able to learn higher abstract information that the               
+single-layer perceptron could not model. Thus, it is               
+expected to produce a higher accuracy than the               
+single-layer perceptron.
+\par
+In addition to the change in the network               
+architecture, the multi-layer perceptron also         
+received proprocessed data, that is, data scaled             
+down to the range of -1 to 1. This was done                     
+exclusively for the features as the classes are simply                 
+represented as a 0 or 1 and thus do not need any                       
+scaling. Theoretically, this change should allow the             
+network to train faster as it does not need to give                     
+priority to training features that are high in value.
+\par
+Finally, after each layer in the network,             
+batch normalization was run to further allow the               
+network to train faster and better.
+
+\section{RESULTS}
+\begin{lstlisting}
+Epoch 1/100
+5/5 [==============================] - 1s 0s/step - loss: 5.1102 - accuracy: 0.3258
+Epoch 2/100
+5/5 [==============================] - 0s 4ms/step - loss: 5.0277 - accuracy: 0.3258
+Epoch 3/100
+5/5 [==============================] - 0s 0s/step - loss: 4.9489 - accuracy: 0.3258
+Epoch 4/100
+5/5 [==============================] - 0s 4ms/step - loss: 4.8675 - accuracy: 0.3258
+Epoch 5/100
+5/5 [==============================] - 0s 2ms/step - loss: 4.7872 - accuracy: 0.3258
+Epoch 6/100
+5/5 [==============================] - 0s 0s/step - loss: 4.7102 - accuracy: 0.3258
+Epoch 7/100
+5/5 [==============================] - 0s 4ms/step - loss: 4.6319 - accuracy: 0.3258
+Epoch 8/100
+5/5 [==============================] - 0s 0s/step - loss: 4.5566 - accuracy: 0.3258
+Epoch 9/100
+5/5 [==============================] - 0s 4ms/step - loss: 4.4817 - accuracy: 0.3258
+Epoch 10/100
+5/5 [==============================] - 0s 0s/step - loss: 4.4088 - accuracy: 0.3258
+Epoch 11/100
+5/5 [==============================] - 0s 4ms/step - loss: 4.3343 - accuracy: 0.3258
+Epoch 12/100
+5/5 [==============================] - 0s 0s/step - loss: 4.2627 - accuracy: 0.3258
+Epoch 13/100
+5/5 [==============================] - 0s 0s/step - loss: 4.1905 - accuracy: 0.3258
+Epoch 14/100
+5/5 [==============================] - 0s 0s/step - loss: 4.1239 - accuracy: 0.3258
+Epoch 15/100
+5/5 [==============================] - 0s 0s/step - loss: 4.0564 - accuracy: 0.3258
+Epoch 16/100
+5/5 [==============================] - 0s 4ms/step - loss: 3.9927 - accuracy: 0.3258
+Epoch 17/100
+5/5 [==============================] - 0s 0s/step - loss: 3.9270 - accuracy: 0.3258
+Epoch 18/100
+5/5 [==============================] - 0s 4ms/step - loss: 3.8681 - accuracy: 0.3258
+Epoch 19/100
+5/5 [==============================] - 0s 2ms/step - loss: 3.8133 - accuracy: 0.3258
+Epoch 20/100
+5/5 [==============================] - 0s 0s/step - loss: 3.7572 - accuracy: 0.3258
+Epoch 21/100
+5/5 [==============================] - 0s 0s/step - loss: 3.7059 - accuracy: 0.3258
+Epoch 22/100
+5/5 [==============================] - 0s 0s/step - loss: 3.6561 - accuracy: 0.3258
+Epoch 23/100
+5/5 [==============================] - 0s 0s/step - loss: 3.6096 - accuracy: 0.3258
+Epoch 24/100
+5/5 [==============================] - 0s 0s/step - loss: 3.5600 - accuracy: 0.3258
+Epoch 25/100
+5/5 [==============================] - 0s 0s/step - loss: 3.5156 - accuracy: 0.3258
+Epoch 26/100
+5/5 [==============================] - 0s 0s/step - loss: 3.4693 - accuracy: 0.3258
+Epoch 27/100
+5/5 [==============================] - 0s 0s/step - loss: 3.4267 - accuracy: 0.3258
+Epoch 28/100
+5/5 [==============================] - 0s 0s/step - loss: 3.3858 - accuracy: 0.3258
+Epoch 29/100
+5/5 [==============================] - 0s 0s/step - loss: 3.3485 - accuracy: 0.3258
+Epoch 30/100
+5/5 [==============================] - 0s 0s/step - loss: 3.3101 - accuracy: 0.3258
+Epoch 31/100
+5/5 [==============================] - 0s 5ms/step - loss: 3.2757 - accuracy: 0.3258
+Epoch 32/100
+5/5 [==============================] - 0s 2ms/step - loss: 3.2444 - accuracy: 0.3258
+Epoch 33/100
+5/5 [==============================] - 0s 2ms/step - loss: 3.2116 - accuracy: 0.3258
+Epoch 34/100
+5/5 [==============================] - 0s 2ms/step - loss: 3.1833 - accuracy: 0.3333
+Epoch 35/100
+5/5 [==============================] - 0s 857us/step - loss: 3.1499 - accuracy: 0.3333
+Epoch 36/100
+5/5 [==============================] - 0s 0s/step - loss: 3.1197 - accuracy: 0.3333
+Epoch 37/100
+5/5 [==============================] - 0s 0s/step - loss: 3.0895 - accuracy: 0.3333
+Epoch 38/100
+5/5 [==============================] - 0s 0s/step - loss: 3.0590 - accuracy: 0.3333
+Epoch 39/100
+5/5 [==============================] - 0s 0s/step - loss: 3.0295 - accuracy: 0.3333
+Epoch 40/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.9974 - accuracy: 0.3333
+Epoch 41/100
+5/5 [==============================] - 0s 0s/step - loss: 2.9681 - accuracy: 0.3333
+Epoch 42/100
+5/5 [==============================] - 0s 0s/step - loss: 2.9407 - accuracy: 0.3409
+Epoch 43/100
+5/5 [==============================] - 0s 0s/step - loss: 2.9120 - accuracy: 0.3409
+Epoch 44/100
+5/5 [==============================] - 0s 0s/step - loss: 2.8824 - accuracy: 0.3409
+Epoch 45/100
+5/5 [==============================] - 0s 0s/step - loss: 2.8530 - accuracy: 0.3409
+Epoch 46/100
+5/5 [==============================] - 0s 0s/step - loss: 2.8241 - accuracy: 0.3409
+Epoch 47/100
+5/5 [==============================] - 0s 0s/step - loss: 2.7919 - accuracy: 0.3485
+Epoch 48/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.7636 - accuracy: 0.3485
+Epoch 49/100
+5/5 [==============================] - 0s 0s/step - loss: 2.7353 - accuracy: 0.3561
+Epoch 50/100
+5/5 [==============================] - 0s 0s/step - loss: 2.7091 - accuracy: 0.3561
+Epoch 51/100
+5/5 [==============================] - 0s 0s/step - loss: 2.6801 - accuracy: 0.3561
+Epoch 52/100
+5/5 [==============================] - 0s 0s/step - loss: 2.6494 - accuracy: 0.3561
+Epoch 53/100
+5/5 [==============================] - 0s 0s/step - loss: 2.6184 - accuracy: 0.3561
+Epoch 54/100
+5/5 [==============================] - 0s 2ms/step - loss: 2.5881 - accuracy: 0.3561
+Epoch 55/100
+5/5 [==============================] - 0s 0s/step - loss: 2.5570 - accuracy: 0.3561
+Epoch 56/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.5264 - accuracy: 0.3636
+Epoch 57/100
+5/5 [==============================] - 0s 0s/step - loss: 2.4954 - accuracy: 0.3712
+Epoch 58/100
+5/5 [==============================] - 0s 0s/step - loss: 2.4648 - accuracy: 0.3561
+Epoch 59/100
+5/5 [==============================] - 0s 0s/step - loss: 2.4381 - accuracy: 0.3561
+Epoch 60/100
+5/5 [==============================] - 0s 0s/step - loss: 2.4102 - accuracy: 0.3561
+Epoch 61/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.3837 - accuracy: 0.3636
+Epoch 62/100
+5/5 [==============================] - 0s 0s/step - loss: 2.3581 - accuracy: 0.3712
+Epoch 63/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.3293 - accuracy: 0.3712
+Epoch 64/100
+5/5 [==============================] - 0s 0s/step - loss: 2.3017 - accuracy: 0.3712
+Epoch 65/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.2719 - accuracy: 0.3712
+Epoch 66/100
+5/5 [==============================] - 0s 0s/step - loss: 2.2419 - accuracy: 0.3864
+Epoch 67/100
+5/5 [==============================] - 0s 0s/step - loss: 2.2144 - accuracy: 0.3864
+Epoch 68/100
+5/5 [==============================] - 0s 0s/step - loss: 2.1865 - accuracy: 0.3864
+Epoch 69/100
+5/5 [==============================] - 0s 0s/step - loss: 2.1579 - accuracy: 0.3712
+Epoch 70/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.1304 - accuracy: 0.3712
+Epoch 71/100
+5/5 [==============================] - 0s 0s/step - loss: 2.1048 - accuracy: 0.3636
+Epoch 72/100
+5/5 [==============================] - 0s 4ms/step - loss: 2.0768 - accuracy: 0.3561
+Epoch 73/100
+5/5 [==============================] - 0s 0s/step - loss: 2.0452 - accuracy: 0.3561
+Epoch 74/100
+5/5 [==============================] - 0s 0s/step - loss: 2.0167 - accuracy: 0.3636
+Epoch 75/100
+5/5 [==============================] - 0s 0s/step - loss: 1.9872 - accuracy: 0.3636
+Epoch 76/100
+5/5 [==============================] - 0s 0s/step - loss: 1.9575 - accuracy: 0.3636
+Epoch 77/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.9277 - accuracy: 0.3864
+Epoch 78/100
+5/5 [==============================] - 0s 0s/step - loss: 1.8979 - accuracy: 0.3864
+Epoch 79/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.8672 - accuracy: 0.3864
+Epoch 80/100
+5/5 [==============================] - 0s 2ms/step - loss: 1.8378 - accuracy: 0.3864
+Epoch 81/100
+5/5 [==============================] - 0s 0s/step - loss: 1.8088 - accuracy: 0.3864
+Epoch 82/100
+5/5 [==============================] - 0s 0s/step - loss: 1.7809 - accuracy: 0.3864
+Epoch 83/100
+5/5 [==============================] - 0s 0s/step - loss: 1.7501 - accuracy: 0.3864
+Epoch 84/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.7235 - accuracy: 0.4091
+Epoch 85/100
+5/5 [==============================] - 0s 0s/step - loss: 1.6962 - accuracy: 0.4167
+Epoch 86/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.6689 - accuracy: 0.4242
+Epoch 87/100
+5/5 [==============================] - 0s 0s/step - loss: 1.6422 - accuracy: 0.4394
+Epoch 88/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.6151 - accuracy: 0.4470
+Epoch 89/100
+5/5 [==============================] - 0s 0s/step - loss: 1.5876 - accuracy: 0.4470
+Epoch 90/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.5601 - accuracy: 0.4621
+Epoch 91/100
+5/5 [==============================] - 0s 0s/step - loss: 1.5331 - accuracy: 0.4621
+Epoch 92/100
+5/5 [==============================] - 0s 2ms/step - loss: 1.5058 - accuracy: 0.4621
+Epoch 93/100
+5/5 [==============================] - 0s 0s/step - loss: 1.4769 - accuracy: 0.4470
+Epoch 94/100
+5/5 [==============================] - 0s 0s/step - loss: 1.4504 - accuracy: 0.4242
+Epoch 95/100
+5/5 [==============================] - 0s 0s/step - loss: 1.4230 - accuracy: 0.4242
+Epoch 96/100
+5/5 [==============================] - 0s 0s/step - loss: 1.3961 - accuracy: 0.4242
+Epoch 97/100
+5/5 [==============================] - 0s 1ms/step - loss: 1.3708 - accuracy: 0.4318
+Epoch 98/100
+5/5 [==============================] - 0s 998us/step - loss: 1.3444 - accuracy: 0.4470
+Epoch 99/100
+5/5 [==============================] - 0s 997us/step - loss: 1.3182 - accuracy: 0.4545
+Epoch 100/100
+5/5 [==============================] - 0s 1ms/step - loss: 1.2951 - accuracy: 0.4545
+1/1 [==============================] - 0s 213ms/step - loss: 0.8540 - accuracy: 0.6667
+Epoch 1/100
+5/5 [==============================] - 1s 4ms/step - loss: 1.8799 - accuracy: 0.2500
+Epoch 2/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.6343 - accuracy: 0.3258
+Epoch 3/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.5378 - accuracy: 0.3712
+Epoch 4/100
+5/5 [==============================] - 0s 0s/step - loss: 1.4903 - accuracy: 0.4242
+Epoch 5/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.3035 - accuracy: 0.4773
+Epoch 6/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.2276 - accuracy: 0.5379
+Epoch 7/100
+5/5 [==============================] - 0s 0s/step - loss: 1.1522 - accuracy: 0.5379
+Epoch 8/100
+5/5 [==============================] - 0s 4ms/step - loss: 1.0671 - accuracy: 0.5758
+Epoch 9/100
+5/5 [==============================] - 0s 0s/step - loss: 1.0572 - accuracy: 0.5379
+Epoch 10/100
+5/5 [==============================] - 0s 5ms/step - loss: 0.9462 - accuracy: 0.5985
+Epoch 11/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.9056 - accuracy: 0.5758
+Epoch 12/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.8131 - accuracy: 0.5985
+Epoch 13/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.8191 - accuracy: 0.6136
+Epoch 14/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.7529 - accuracy: 0.6667
+Epoch 15/100
+5/5 [==============================] - 0s 262us/step - loss: 0.6988 - accuracy: 0.6667
+Epoch 16/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.6868 - accuracy: 0.6515
+Epoch 17/100
+5/5 [==============================] - 0s 0s/step - loss: 0.6499 - accuracy: 0.6894
+Epoch 18/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.5962 - accuracy: 0.7197
+Epoch 19/100
+5/5 [==============================] - 0s 0s/step - loss: 0.5714 - accuracy: 0.7424
+Epoch 20/100
+5/5 [==============================] - 0s 0s/step - loss: 0.5506 - accuracy: 0.7576
+Epoch 21/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.5127 - accuracy: 0.8258
+Epoch 22/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.5111 - accuracy: 0.8106
+Epoch 23/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.4799 - accuracy: 0.8333
+Epoch 24/100
+5/5 [==============================] - 0s 0s/step - loss: 0.4614 - accuracy: 0.8485
+Epoch 25/100
+5/5 [==============================] - 0s 0s/step - loss: 0.4414 - accuracy: 0.8485
+Epoch 26/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.4581 - accuracy: 0.8409
+Epoch 27/100
+5/5 [==============================] - 0s 0s/step - loss: 0.4167 - accuracy: 0.8485
+Epoch 28/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.4099 - accuracy: 0.8561
+Epoch 29/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.4126 - accuracy: 0.8712
+Epoch 30/100
+5/5 [==============================] - 0s 0s/step - loss: 0.3506 - accuracy: 0.8939
+Epoch 31/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.3735 - accuracy: 0.9015
+Epoch 32/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.3579 - accuracy: 0.8939
+Epoch 33/100
+5/5 [==============================] - 0s 0s/step - loss: 0.3769 - accuracy: 0.8939
+Epoch 34/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.3269 - accuracy: 0.9167
+Epoch 35/100
+5/5 [==============================] - 0s 0s/step - loss: 0.3213 - accuracy: 0.9091
+Epoch 36/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.3181 - accuracy: 0.9091
+Epoch 37/100
+5/5 [==============================] - 0s 0s/step - loss: 0.3084 - accuracy: 0.9318
+Epoch 38/100
+5/5 [==============================] - 0s 0s/step - loss: 0.3253 - accuracy: 0.9242
+Epoch 39/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.3335 - accuracy: 0.9167
+Epoch 40/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2868 - accuracy: 0.9167
+Epoch 41/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2752 - accuracy: 0.9394
+Epoch 42/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.2774 - accuracy: 0.9470
+Epoch 43/100
+5/5 [==============================] - 0s 6ms/step - loss: 0.3153 - accuracy: 0.9091
+Epoch 44/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.2885 - accuracy: 0.9167
+Epoch 45/100
+5/5 [==============================] - 0s 0s/step - loss: 0.3074 - accuracy: 0.9318
+Epoch 46/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2612 - accuracy: 0.9394
+Epoch 47/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.2433 - accuracy: 0.9394
+Epoch 48/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2732 - accuracy: 0.9242
+Epoch 49/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2604 - accuracy: 0.9167
+Epoch 50/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.2491 - accuracy: 0.9318
+Epoch 51/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2314 - accuracy: 0.9470
+Epoch 52/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.2539 - accuracy: 0.9394
+Epoch 53/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2223 - accuracy: 0.9242
+Epoch 54/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.2067 - accuracy: 0.9545
+Epoch 55/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2257 - accuracy: 0.9394
+Epoch 56/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1948 - accuracy: 0.9697
+Epoch 57/100
+5/5 [==============================] - 0s 5ms/step - loss: 0.2136 - accuracy: 0.9545
+Epoch 58/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.2149 - accuracy: 0.9621
+Epoch 59/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.1907 - accuracy: 0.9621
+Epoch 60/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.1968 - accuracy: 0.9545
+Epoch 61/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.1941 - accuracy: 0.9394
+Epoch 62/100
+5/5 [==============================] - 0s 0s/step - loss: 0.2294 - accuracy: 0.9318
+Epoch 63/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.2045 - accuracy: 0.9242
+Epoch 64/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1784 - accuracy: 0.9545
+Epoch 65/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1902 - accuracy: 0.9470
+Epoch 66/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1882 - accuracy: 0.9470
+Epoch 67/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1751 - accuracy: 0.9621
+Epoch 68/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1750 - accuracy: 0.9394
+Epoch 69/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1843 - accuracy: 0.9470
+Epoch 70/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1715 - accuracy: 0.9545
+Epoch 71/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.2200 - accuracy: 0.9242
+Epoch 72/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1641 - accuracy: 0.9697
+Epoch 73/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1988 - accuracy: 0.9470
+Epoch 74/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1971 - accuracy: 0.9470
+Epoch 75/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1560 - accuracy: 0.9621
+Epoch 76/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1892 - accuracy: 0.9470
+Epoch 77/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1928 - accuracy: 0.9545
+Epoch 78/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1630 - accuracy: 0.9697
+Epoch 79/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1838 - accuracy: 0.9545
+Epoch 80/100
+5/5 [==============================] - 0s 6ms/step - loss: 0.1537 - accuracy: 0.9621
+Epoch 81/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1483 - accuracy: 0.9697
+Epoch 82/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1469 - accuracy: 0.9621
+Epoch 83/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1927 - accuracy: 0.9470
+Epoch 84/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1749 - accuracy: 0.9545
+Epoch 85/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1645 - accuracy: 0.9545
+Epoch 86/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1411 - accuracy: 0.9545
+Epoch 87/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1450 - accuracy: 0.9773
+Epoch 88/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1746 - accuracy: 0.9545
+Epoch 89/100
+5/5 [==============================] - 0s 2ms/step - loss: 0.1279 - accuracy: 0.9697
+Epoch 90/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1316 - accuracy: 0.9848
+Epoch 91/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1670 - accuracy: 0.9470
+Epoch 92/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1805 - accuracy: 0.9318
+Epoch 93/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1345 - accuracy: 0.9621
+Epoch 94/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1790 - accuracy: 0.9545
+Epoch 95/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1490 - accuracy: 0.9621
+Epoch 96/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1435 - accuracy: 0.9394
+Epoch 97/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1634 - accuracy: 0.9470
+Epoch 98/100
+5/5 [==============================] - 0s 0s/step - loss: 0.1682 - accuracy: 0.9470
+Epoch 99/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1984 - accuracy: 0.9167
+Epoch 100/100
+5/5 [==============================] - 0s 4ms/step - loss: 0.1511 - accuracy: 0.9470
+1/1 [==============================] - 0s 250ms/step - loss: 0.2106 - accuracy: 0.9333
+
+Naive Accuracy:  66.666%
+
+Naive Predictions:
+ [[0.01354977 0.5061691  0.48028105]
+ [0.06246578 0.56894875 0.36858547]
+ [0.0074184  0.44270876 0.5498728 ]
+ [0.01080847 0.4541977  0.53499377]
+ [0.02312316 0.55372    0.4231569 ]
+ [0.00527738 0.39130107 0.60342157]
+ [0.00576249 0.52103436 0.4732032 ]
+ [0.00304265 0.31141222 0.68554515]
+ [0.07634713 0.58648854 0.33716434]
+ [0.00298612 0.3317028  0.6653111 ]
+ [0.00340858 0.28069374 0.7158977 ]
+ [0.01619304 0.5350266  0.44878045]
+ [0.00580444 0.32919884 0.66499674]
+ [0.01750648 0.56174    0.4207535 ]
+ [0.00643218 0.49766505 0.49590284]]
+
+Better Accuracy:  93.333%
+
+Better Predictions:
+ [[0.00862633 0.9620326  0.02934105]
+ [0.9790445  0.01505063 0.00590489]
+ [0.00578253 0.9523178  0.0418997 ]
+ [0.00888783 0.97394866 0.01716346]
+ [0.07783689 0.7403439  0.18181916]
+ [0.01994696 0.21152395 0.7685291 ]
+ [0.0148526  0.86186147 0.12328597]
+ [0.00590803 0.02657974 0.96751225]
+ [0.9846364  0.0105518  0.00481179]
+ [0.00601991 0.05104782 0.94293225]
+ [0.00143864 0.0452151  0.95334625]
+ [0.01584265 0.9249697  0.0591877 ]
+ [0.01459309 0.3523831  0.63302374]
+ [0.01764467 0.9287313  0.05362389]
+ [0.01701402 0.77023745 0.21274848]]
+
+\end{lstlisting}
+
+As seen in the example run, the multi-layer               
+perceptron performed much better than the           
+single-layer perceptron. The accuracy for the           
+single-layer perceptron and multi-layer perceptron         
+was 66.666\% and 93.333\%, respectively.\\
+
+Thus, it can easily be stated that the hidden layers and               
+preprocessing of data allowed the multi-layer           
+perceptron to much better learn the data. 
+\par
+The 2 hidden layers allowed the multi-layer             
+perceptron to learn higher abstract features about             
+the Iris data set and thus produced a higher                 
+accuracy. Furthermore, the data scaling and batch             
+normalization increased the network’s learning rate.
+\par
+Although a 93.333\% accuracy is astounding,           
+this is not likely to continue if the test data set size                       
+increased.
+
+
+\section{Conclusions}
+Overall, the results gathered follow the           
+expectation/hypothesis, that is, that a more complex             
+network, but not too complex, would be able to                 
+learn much more effectively than a simple one. This                 
+is likely in many scenarios. \\However, it is likely                 
+that the bias-variance tradeoff effect would come             
+into play here. That is, as the bias of a model                     
+increases, its variance will as well, and vise-versa.               
+A simple model has extreme bias, but no variance.                 
+\\A extremely complex model has high variance, but               
+almost no bias. Thus, an extremely complex model               
+is likely to overfit a data set, while a simple model                     
+is likely to underfit a data set. \\Therefore, it is                   
+evident that caution must be taken to find a point                   
+where the bias and variance are minimized while               
+still producing an effective model. \\This can be done                 
+by using a technique like cross-validation to             
+produce models that are each trained and validated               
+against different “folds” of the train data set. Then,                 
+the model that minimizes the loss function (against               
+the sum of error of the validation folds) can be used                     
+as the final model and can be run on the test set to                         
+produce the resulting accuracy.
+
+
+\section{Platforms}
+\begin{itemize}
+\item pycharm, python 3.9
+\item overleaf.com
+\end{itemize}
+
+\end{document}
